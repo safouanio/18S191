@@ -158,23 +158,16 @@ A package contains a coherent set of functionality that you can often use a blac
 
 # ╔═╡ 851c03a4-e7a4-11ea-1652-d59b7a6599f0
 # setting up an empty package environment
-begin
-	import Pkg
-	Pkg.activate(mktempdir())
-	Pkg.Registry.update()
-end
 
 # ╔═╡ d6ee91ea-e750-11ea-1260-31ebf3ec6a9b
 # add (ie install) a package to our environment
 begin
-	Pkg.add("Compose")
 	# call `using` so that we can use it in our code
 	using Compose
 end
 
 # ╔═╡ 5acd58e0-e856-11ea-2d3d-8329889fe16f
 begin
-	Pkg.add("PlutoUI")
 	using PlutoUI
 end
 
