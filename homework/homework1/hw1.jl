@@ -57,13 +57,11 @@ end
 
 # ╔═╡ 74b008f6-ed6b-11ea-291f-b3791d6d1b35
 begin
-	Pkg.add(["Images", "ImageMagick"])
 	using Images
 end
 
 # ╔═╡ 6b30dc38-ed6b-11ea-10f3-ab3f121bf4b8
 begin
-	Pkg.add("PlutoUI")
 	using PlutoUI
 end
 
