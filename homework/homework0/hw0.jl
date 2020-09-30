@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.8
+# v0.11.14
 
 using Markdown
 using InteractiveUtils
@@ -13,13 +13,31 @@ macro bind(def, element)
     end
 end
 
+# ╔═╡ 6e18ce70-0318-11eb-1a54-df7561e06a79
+using Statistics
+
+# ╔═╡ d6ee91ea-e750-11ea-1260-31ebf3ec6a9b
+# add (ie install) a package to our environment
+begin
+	# call `using` so that we can use it in our code
+	using Compose
+end
+
+# ╔═╡ 5acd58e0-e856-11ea-2d3d-8329889fe16f
+begin
+	using PlutoUI
+end
+
+# ╔═╡ 93958d00-0354-11eb-26fd-87fb468ace1d
+using Plots
+
 # ╔═╡ fafae38e-e852-11ea-1208-732b4744e4c2
 md"_homework 0, version 2_"
 
 # ╔═╡ 7308bc54-e6cd-11ea-0eab-83f7535edf25
 # edit the code below to set your name and kerberos ID (i.e. email without @mit.edu)
 
-student = (name = "Jazzy Doe", kerberos_id = "jazz")
+student = (name = "Safouane Lbd", kerberos_id = "safouane_sl")
 
 # press the ▶ button in the bottom right of this cell to run your edits
 # or use Shift+Enter
@@ -30,7 +48,7 @@ student = (name = "Jazzy Doe", kerberos_id = "jazz")
 # ╔═╡ cdff6730-e785-11ea-2546-4969521b33a7
 md"""
 
-Submission by: **_$(student.name)_** ($(student.kerberos_id)@mit.edu)
+Submission by: **_$(student.name)_** ($(student.kerberos_id)@hotmail.com)
 """
 
 # ╔═╡ a2181260-e6cd-11ea-2a69-8d9d31d1ef0e
@@ -71,6 +89,9 @@ In general, you will never get to the point where `x/a` is _exactly_ equal to `a
 So instead, the algorithm takes a parameter `error_margin`, which is used to decide when `x/a` and `a` are close enough to halt.
 "
 
+# ╔═╡ 7953b700-0318-11eb-167c-074fb4c939db
+a,ϵ 
+
 # ╔═╡ 56866718-e6ce-11ea-0804-d108af4e5653
 md"### Exercise 1.1
 
@@ -80,9 +101,7 @@ This is because the square root must be between the numbers `x/a` and `a`. Why?
 "
 
 # ╔═╡ bccf0e88-e754-11ea-3ab8-0170c2d44628
-ex_1_1 = md"""
-your answer here
-""" 
+ex_1_1 = md"""whatever the value of `a`, it tend to evolve in one direction and `x/a` in the opposite, that's why the square root will be necessary between the two quantities following the expression `a = x/a`.""" 
 
 # you might need to wait until all other cells in this notebook have completed running. 
 # scroll down the page to see what's up
@@ -99,11 +118,16 @@ Write a function newton_sqrt(x) which implements the above algorithm."
 
 # ╔═╡ 4896bf0c-e754-11ea-19dc-1380bb356ab6
 function newton_sqrt(x, error_margin=0.01, a=x / 2) # a=x/2 is the default value of `a`
-	return x # this is wrong, write your code here!
+	ϵ = abs(x/a - a)
+	while ϵ > error_margin
+		a = mean([a,x/a])
+		ϵ = abs(x/a - a)
+	end
+	return a
 end
 
 # ╔═╡ 7a01a508-e78a-11ea-11da-999d38785348
-newton_sqrt(2)
+newton_sqrt(91)
 
 # ╔═╡ 682db9f8-e7b1-11ea-3949-6b683ca8b47b
 let
@@ -159,23 +183,11 @@ A package contains a coherent set of functionality that you can often use a blac
 # ╔═╡ 851c03a4-e7a4-11ea-1652-d59b7a6599f0
 # setting up an empty package environment
 
-# ╔═╡ d6ee91ea-e750-11ea-1260-31ebf3ec6a9b
-# add (ie install) a package to our environment
-begin
-	# call `using` so that we can use it in our code
-	using Compose
-end
-
-# ╔═╡ 5acd58e0-e856-11ea-2d3d-8329889fe16f
-begin
-	using PlutoUI
-end
-
 # ╔═╡ dbc4da6a-e7b4-11ea-3b70-6f2abfcab992
 md"Just like the definition above, our `sierpinksi` function is _recursive_: it calls itself."
 
 # ╔═╡ 02b9c9d6-e752-11ea-0f32-91b7b6481684
-complexity = 3
+complexity = 1
 
 # ╔═╡ 1eb79812-e7b5-11ea-1c10-63b24803dd8a
 if complexity == 3 
@@ -209,8 +221,35 @@ area_sierpinski(1) = 0.??
 
 # ╔═╡ ca8d2f72-e7b6-11ea-1893-f1e6d0a20dc7
 function area_sierpinski(n)
-	return 1.0
+	if n == 0
+		return 1.0
+	else
+		return  (3/4)*area_sierpinski(n - 1)
+	end	
 end
+
+# ╔═╡ 16691120-0355-11eb-1ce1-5f185e36bffe
+m = @bind m Slider(1:100,show_value=true)
+
+# ╔═╡ 2f955a40-0356-11eb-3277-a386ed04c759
+function expo(x)
+	return (3/4)^(x)
+end
+
+# ╔═╡ 2b853b1e-0354-11eb-2373-898f19861ea4
+y = area_sierpinski.(1:m)
+
+# ╔═╡ c1bc6e62-0354-11eb-0905-d755075d236e
+x = 1:m
+
+# ╔═╡ 48a3a600-0355-11eb-0d26-b9179ee650bb
+plot(x,y)
+
+# ╔═╡ 747afca0-0356-11eb-3804-83d4d425d73f
+expo.(x)
+
+# ╔═╡ f05ee862-0354-11eb-2863-c31f3f77448f
+plotly()
 
 # ╔═╡ 71c78614-e7bc-11ea-0959-c7a91a10d481
 if area_sierpinski(0) == 1.0 && area_sierpinski(1) == 3 / 4
@@ -301,12 +340,14 @@ has area **$(area_sierpinski(n))**
 
 # ╔═╡ Cell order:
 # ╟─fafae38e-e852-11ea-1208-732b4744e4c2
-# ╟─cdff6730-e785-11ea-2546-4969521b33a7
+# ╠═cdff6730-e785-11ea-2546-4969521b33a7
 # ╠═7308bc54-e6cd-11ea-0eab-83f7535edf25
 # ╟─a2181260-e6cd-11ea-2a69-8d9d31d1ef0e
 # ╟─094e39c8-e6ce-11ea-131b-07c4a1199edf
 # ╟─31a8fbf8-e6ce-11ea-2c66-4b4d02b41995
 # ╟─339c2d5c-e6ce-11ea-32f9-714b3628909c
+# ╠═6e18ce70-0318-11eb-1a54-df7561e06a79
+# ╠═7953b700-0318-11eb-167c-074fb4c939db
 # ╟─56866718-e6ce-11ea-0804-d108af4e5653
 # ╠═bccf0e88-e754-11ea-3ab8-0170c2d44628
 # ╟─e7abd366-e7a6-11ea-30d7-1b6194614d0a
@@ -328,11 +369,19 @@ has area **$(area_sierpinski(n))**
 # ╟─1eb79812-e7b5-11ea-1c10-63b24803dd8a
 # ╟─d7e8202c-e7b5-11ea-30d3-adcd6867d5f5
 # ╠═df0a4068-e7b2-11ea-2475-81b237d492b3
-# ╟─f22222b4-e7b5-11ea-0ea0-8fa368d2a014
+# ╠═f22222b4-e7b5-11ea-0ea0-8fa368d2a014
 # ╠═ca8d2f72-e7b6-11ea-1893-f1e6d0a20dc7
+# ╠═16691120-0355-11eb-1ce1-5f185e36bffe
+# ╠═48a3a600-0355-11eb-0d26-b9179ee650bb
+# ╠═2f955a40-0356-11eb-3277-a386ed04c759
+# ╠═747afca0-0356-11eb-3804-83d4d425d73f
+# ╠═2b853b1e-0354-11eb-2373-898f19861ea4
+# ╠═c1bc6e62-0354-11eb-0905-d755075d236e
+# ╠═93958d00-0354-11eb-26fd-87fb468ace1d
+# ╠═f05ee862-0354-11eb-2863-c31f3f77448f
 # ╟─71c78614-e7bc-11ea-0959-c7a91a10d481
 # ╟─c21096c0-e856-11ea-3dc5-a5b0cbf29335
-# ╟─52533e00-e856-11ea-08a7-25e556fb1127
+# ╠═52533e00-e856-11ea-08a7-25e556fb1127
 # ╟─147ed7b0-e856-11ea-0d0e-7ff0d527e352
 # ╟─c1ecad86-e7bc-11ea-1201-23ee380181a1
 # ╟─c9bf4288-e6ce-11ea-0e13-a36b5e685998
